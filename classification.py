@@ -22,8 +22,7 @@ def precision(confusion):
     return precision, percent_correct
 
 
-if __name__ == '__main__':
-
+def main():
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     batch_size = 128
     num_classes = 10
@@ -94,3 +93,7 @@ if __name__ == '__main__':
         classifier_save_path = Path('models/run' + str(run_id) + '/w_dim' + str(epoch) + '.mdl')
         classifier_save_path.parent.mkdir(parents=True, exist_ok=True)
         torch.save(classifier, str(classifier_save_path))
+
+
+if __name__ == '__main__':
+    main()
