@@ -8,12 +8,12 @@ from torch import nn as nn
 
 class Encoder(nn.Module):
     def __init__(self):
-        super().__init__()
+        super(Encoder, self).__init__()
         self.c0 = nn.Conv2d(3, 64, kernel_size=4, stride=1)
         self.c1 = nn.Conv2d(64, 128, kernel_size=4, stride=1)
         self.c2 = nn.Conv2d(128, 256, kernel_size=4, stride=1)
         self.c3 = nn.Conv2d(256, 512, kernel_size=4, stride=1)
-        self.l1 = nn.Linear(512*20*20, 64)
+        self.l1 = nn.Linear(512 * 20 * 20, 64)
 
         self.b1 = nn.BatchNorm2d(128)
         self.b2 = nn.BatchNorm2d(256)
@@ -30,7 +30,7 @@ class Encoder(nn.Module):
 
 class GlobalDiscriminator(nn.Module):
     def __init__(self):
-        super().__init__()
+        super(GlobalDiscriminator, self).__init__()
         self.c0 = nn.Conv2d(128, 64, kernel_size=3)
         self.c1 = nn.Conv2d(64, 32, kernel_size=3)
         self.l0 = nn.Linear(32 * 22 * 22 + 64, 512)
@@ -49,7 +49,7 @@ class GlobalDiscriminator(nn.Module):
 
 class LocalDiscriminator(nn.Module):
     def __init__(self):
-        super().__init__()
+        super(LocalDiscriminator, self).__init__()
         self.c0 = nn.Conv2d(192, 512, kernel_size=1)
         self.c1 = nn.Conv2d(512, 512, kernel_size=1)
         self.c2 = nn.Conv2d(512, 1, kernel_size=1)
@@ -62,7 +62,7 @@ class LocalDiscriminator(nn.Module):
 
 class PriorDiscriminator(nn.Module):
     def __init__(self):
-        super().__init__()
+        super(PriorDiscriminator, self).__init__()
         self.l0 = nn.Linear(64, 1000)
         self.l1 = nn.Linear(1000, 200)
         self.l2 = nn.Linear(200, 1)
@@ -75,7 +75,7 @@ class PriorDiscriminator(nn.Module):
 
 class Classifier(nn.Module):
     def __init__(self):
-        super().__init__()
+        super(Classifier, self).__init__()
         self.l1 = nn.Linear(64, 15)
         self.bn1 = nn.BatchNorm1d(15)
         self.l2 = nn.Linear(15, 10)
@@ -93,8 +93,8 @@ class Classifier(nn.Module):
 
 class DeepInfoAsLatent(nn.Module):
     def __init__(self, run, epoch):
-        super().__init__()
-        model_path = Path(r'c:/data/deepinfomax/models') / Path(str(run)) / Path('encoder' + str(epoch) + '.wgt')
+        super(DeepInfoAsLatent, self).__init__()
+        model_path = Path(r'models') / Path(str(run)) / Path('encoder' + str(epoch) + '.wgt')
         self.encoder = Encoder()
         self.encoder.load_state_dict(torch.load(str(model_path)))
         self.classifier = Classifier()

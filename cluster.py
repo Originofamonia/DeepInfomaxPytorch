@@ -9,19 +9,19 @@ import random
 from matplotlib import pyplot as plt
 import numpy as np
 
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
 batch_size = 128
 
 # image size 3, 32, 32
 # batch size must be an even number
 # shuffle must be True
-cifar_10_train_dt = CIFAR10(r'c:\data\tv', download=True, transform=ToTensor())
-#dev = Subset(cifar_10_train_dt, range(128))
+cifar_10_train_dt = CIFAR10(r'data', download=True, transform=ToTensor())
+# dev = Subset(cifar_10_train_dt, range(128))
 cifar_10_train_l = DataLoader(cifar_10_train_dt, batch_size=batch_size, shuffle=True, drop_last=True,
                               pin_memory=torch.cuda.is_available())
 
 epoch = 9
-model_path = Path(r'c:\data\deepinfomax\models\run1\encoder' + str(epoch))
+model_path = Path(r'models\run1\encoder' + str(epoch))
 
 encoder = models.Encoder()
 encoder.load_state_dict(torch.load(str(model_path)))
@@ -46,7 +46,6 @@ for minibatch in minibatches:
 
 
 def display(subject, ordered):
-
     def l1_dist(x, y):
         return torch.sum(x - y).item()
 
@@ -81,4 +80,3 @@ while True:
     # pick a random image
     subject = ordered[random.randrange(0, len(ordered))]
     display(subject, ordered)
-

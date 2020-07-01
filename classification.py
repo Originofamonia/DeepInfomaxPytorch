@@ -24,7 +24,7 @@ def precision(confusion):
 
 if __name__ == '__main__':
 
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    device = 'cuda' if torch.cuda.is_available() else 'cpu'
     batch_size = 128
     num_classes = 10
     fully_supervised = False
@@ -35,7 +35,7 @@ if __name__ == '__main__':
     # image size 3, 32, 32
     # batch size must be an even number
     # shuffle must be True
-    ds = CIFAR10(r'c:\data\tv', download=True, transform=ToTensor())
+    ds = CIFAR10('data', download=True, transform=ToTensor())
     len_train = len(ds) // 10 * 9
     len_test = len(ds) - len_train
     train, test = random_split(ds, [len_train, len_test])
@@ -50,7 +50,7 @@ if __name__ == '__main__':
     else:
         classifier = models.DeepInfoAsLatent('run5', '990').to(device)
         if reload is not None:
-            classifier = torch.load(f'c:/data/deepinfomax/models/run{run_id}/w_dim{reload}.mdl')
+            classifier = torch.load('models/run{run_id}/w_dim{reload}.mdl')
 
     optim = Adam(classifier.parameters(), lr=1e-4)
     criterion = nn.CrossEntropyLoss()
@@ -67,7 +67,7 @@ if __name__ == '__main__':
             y = classifier(x)
             loss = criterion(y, target)
             ll.append(loss.detach().item())
-            batch.set_description(f'{epoch} Train Loss: {stats.mean(ll)}')
+            batch.set_description('Epoch: {} Train Loss: {}'.format(epoch, stats.mean(ll)))
             loss.backward()
             optim.step()
 
@@ -81,7 +81,7 @@ if __name__ == '__main__':
             y = classifier(x)
             loss = criterion(y, target)
             ll.append(loss.detach().item())
-            batch.set_description(f'{epoch} Test Loss: {stats.mean(ll)}')
+            batch.set_description('Epoch: {} Test Loss: {}'.format(epoch, stats.mean(ll)))
 
             _, predicted = y.detach().max(1)
 
@@ -91,6 +91,6 @@ if __name__ == '__main__':
         precis = precision(confusion)
         print(precis)
 
-        classifier_save_path = Path('c:/data/deepinfomax/models/run' + str(run_id) + '/w_dim' + str(epoch) + '.mdl')
+        classifier_save_path = Path('models/run' + str(run_id) + '/w_dim' + str(epoch) + '.mdl')
         classifier_save_path.parent.mkdir(parents=True, exist_ok=True)
         torch.save(classifier, str(classifier_save_path))
